@@ -8,7 +8,7 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '././env',
+      envFilePath: '.env',
     }),
   ],
   controllers: [AppController],
@@ -21,7 +21,6 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
         const PASSWORD = configService.get('RABBITMQ_PASS');
         const HOST = configService.get('RABBITMQ_HOST');
         const QUEUE = configService.get('RABBITMQ_AUTH_QUEUE');
-
         return ClientProxyFactory.create({
           transport: Transport.RMQ,
           options: {
