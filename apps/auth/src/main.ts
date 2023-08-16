@@ -12,10 +12,16 @@ async function bootstrap() {
   const HOST = configService.get('RABBITMQ_HOST');
   const QUEUE = configService.get('RABBITMQ_AUTH_QUEUE');
 
+  console.log(USER);
+  console.log(PASSWORD);
+  console.log(HOST);
+  console.log(QUEUE);
+
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: [`amqp://${USER}:${PASSWORD}@${HOST}`],
+      // urls: [`amqp://${USER}:${PASSWORD}@${HOST}`],
+      urls: [`amqp://user:password@localhost:5675`],
       noAck: false,
       queue: QUEUE,
       queueOptions: {

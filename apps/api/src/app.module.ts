@@ -21,10 +21,15 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
         const PASSWORD = configService.get('RABBITMQ_PASS');
         const HOST = configService.get('RABBITMQ_HOST');
         const QUEUE = configService.get('RABBITMQ_AUTH_QUEUE');
+        console.log(USER);
+        console.log(PASSWORD);
+        console.log(HOST);
+        console.log(QUEUE);
         return ClientProxyFactory.create({
           transport: Transport.RMQ,
           options: {
-            urls: [`amqp://${USER}:${PASSWORD}@${HOST}`],
+            // urls: [`amqp://${USER}:${PASSWORD}@${HOST}`],
+            urls: [`amqp://user:password@localhost:5675`],
             queue: QUEUE,
             queueOptions: {
               durable: true,

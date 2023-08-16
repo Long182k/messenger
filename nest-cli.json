@@ -4,7 +4,7 @@
   "sourceRoot": "apps/messenger-clone/src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "webpack": true,
+    "webpack": false,
     "tsConfigPath": "apps/messenger-clone/tsconfig.app.json"
   },
   "monorepo": true,

@@ -1,27 +1,65 @@
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
+
+import {
+  SharedModule,
+  PostgresDBModule,
+  SharedService,
+  UserEntity,
+  UsersRepository,
+  // FriendRequestsRepository,
+  // FriendRequestEntity,
+  // ConversationEntity,
+  // MessageEntity,
+} from '@app/shared';
+
+// import { JwtGuard } from './jwt.guard';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+// import { JwtStrategy } from './jwt-strategy';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+    JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get('POSTGRES_URL'),
-        // autoLoadEntities: true,
-        // synchronize: true, // shouldn't be used in production - may lose data
+        secret: configService.get('JWT_SECRET'),
+        signOptions: { expiresIn: '3600s' },
       }),
       inject: [ConfigService],
     }),
+
+    SharedModule,
+    PostgresDBModule,
+
+    TypeOrmModule.forFeature([
+      UserEntity,
+      // FriendRequestEntity,
+      // ConversationEntity,
+      // MessageEntity,
+    ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    // JwtGuard,
+    // JwtStrategy,
+    {
+      provide: 'AuthServiceInterface',
+      useClass: AuthService,
+    },
+    {
+      provide: 'UsersRepositoryInterface',
+      useClass: UsersRepository,
+    },
+    {
+      provide: 'SharedServiceInterface',
+      useClass: SharedService,
+    },
+    // {
+    //   provide: 'FriendRequestsRepositoryInterface',
+    //   useClass: FriendRequestsRepository,
+    // },
+  ],
 })
 export class AuthModule {}
